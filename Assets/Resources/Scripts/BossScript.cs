@@ -25,12 +25,29 @@ public class BossScript : MonoBehaviour {
 		// check if destination reached? 
 		if (Input.GetMouseButtonDown(0)) {
 			RaycastHit hit;
-
+			// based on https://docs.unity3d.com/Manual/nav-MoveToClickPoint.html
 			if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100)) {
-				WalkToPosition (hit.point);
+//				agent.areaMask.
+				NavMeshHit meshHit;
+				if (NavMesh.SamplePosition (hit.point, out meshHit, 5, NavMesh.AllAreas)) {
+					WalkToPosition (meshHit.position);
+				}
+
 			}
 		}
-		if (target != null && IsCloseEnough ()) {
+		if (IsCloseEnough ()) {
+			DidReachDestination ();
+		}
+	}
+
+	void OnCollisionEnter(Collision collider) {		
+		print (collider.collider);
+	}
+
+	void OnTriggerEnter(Collider collider) {
+		print ("hit a damn trigger");
+
+		if (collider.GetComponent<Collider>().tag == "OBSTACLE") {
 			DidReachDestination ();
 		}
 	}
@@ -46,7 +63,8 @@ public class BossScript : MonoBehaviour {
 	}
 
 	bool IsCloseEnough() {
-		return transform.position.x == target.x
-		&& transform.position.z == target.z;
-	}
+
+		return Mathf.Abs(transform.position.x - target.x) < .1
+			&& Mathf.Abs(transform.position.z - target.z) < .1;
+	}		
 }
