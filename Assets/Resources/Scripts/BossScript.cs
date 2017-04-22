@@ -2,17 +2,42 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 
-
-public class BossScript : MonoBehaviour {
+public class BossScript : MonoPauseBehavior {
 
 	Vector3 target;
 	NavMeshAgent agent;
 	Animator animator;
+	bool hasDest;
+	UnityAction restartAction;
+	public Vector3 originPosition;
+	public Vector3 originRotation;
 
-	// Use this for initialization
+	void OnEnable () {
+		originPosition = transform.position;
+		originRotation = transform.eulerAngles;
+		restartAction = new UnityAction (RestartCharacter);
+		EventManager.StartListening ("RESTART", restartAction);
+		RegisterPause ();
+
+	}
+
+	void OnDisable () {
+		EventManager.StopListening ("RESTART", restartAction);
+	}
+
+	void RestartCharacter () {
+		transform.position = originPosition;
+		transform.eulerAngles = originRotation;
+		hasDest = false;
+		agent.SetDestination (transform.position);
+		animator.SetBool ("isWalking", false);
+		animator.SetTime (0);
+	}
 	void Start () {
 		GetAllComponents ();
+		hasDest = false;
 	}
 
 	void GetAllComponents () {
@@ -23,25 +48,34 @@ public class BossScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		// check if destination reached? 
-		if (Input.GetMouseButtonDown(0)) {
-			RaycastHit hit;
-			// based on https://docs.unity3d.com/Manual/nav-MoveToClickPoint.html
-			if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100)) {
+		if (isPaused) {
+			animator.speed = 0;
+			agent.SetDestination (transform.position);
+		} else {
+			animator.speed = 1;
+			if (Input.GetMouseButtonDown (0)) {
+				RaycastHit hit;
+				// based on https://docs.unity3d.com/Manual/nav-MoveToClickPoint.html
+				if (Physics.Raycast (Camera.main.ScreenPointToRay (Input.mousePosition), out hit, 100)) {
 //				agent.areaMask.
-				NavMeshHit meshHit;
-				if (NavMesh.SamplePosition (hit.point, out meshHit, 5, NavMesh.AllAreas)) {
-					WalkToPosition (meshHit.position);
-				}
+					NavMeshHit meshHit;
+					if (NavMesh.SamplePosition (hit.point, out meshHit, 5, NavMesh.AllAreas)) {
+						target = meshHit.position;
+						hasDest = true;
+					}
 
+				}
 			}
-		}
-		if (IsCloseEnough ()) {
-			DidReachDestination ();
+			if (hasDest) {
+				WalkToPosition (target);
+			}
+			if (IsCloseEnough ()) {
+				DidReachDestination ();
+			}
 		}
 	}
 
 	void WalkToPosition(Vector3 newPosition) {
-		target = newPosition;
 		animator.SetBool ("isWalking", true);
 		agent.SetDestination (newPosition);
 	}
@@ -51,7 +85,6 @@ public class BossScript : MonoBehaviour {
 	}
 
 	bool IsCloseEnough() {
-
 		return Mathf.Abs(transform.position.x - target.x) < .1
 			&& Mathf.Abs(transform.position.z - target.z) < .1;
 	}		

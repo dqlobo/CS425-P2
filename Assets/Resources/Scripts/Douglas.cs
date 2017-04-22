@@ -1,47 +1,71 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.AI;
 
-public class Douglas : MonoBehaviour {
+public class Douglas : MonoPauseBehavior {
 
 	public Transform target;
-	NavMeshAgent agent;
 	Animator animator;
 	Rigidbody rb;
+	BoxCollider bc;
+	UnityAction restartAction;
 
-	// Use this for initialization
-	void Start () {
-		GetAllComponents ();
+	void OnEnable () {
+		restartAction = new UnityAction (RestartCharacter);
+		EventManager.StartListening ("RESTART", restartAction);
+		RegisterPause ();
+
 	}
 
-	void GetAllComponents () {
-		agent = GetComponent<NavMeshAgent> ();
+	void OnDisable () {
+		EventManager.StopListening ("RESTART", restartAction);
+	}
+
+	void RestartCharacter () {
+		gameObject.SetActive (false);
+	}
+
+	void Start () {
 		animator = GetComponent<Animator> ();
 		rb = GetComponent<Rigidbody> ();
+		bc = GetComponent<BoxCollider> ();
 	}
-	
-	// Update is called once per frame
+
 	void Update () {
-		if (transform.position.y < -0.03) {
-			SetFallingState ();
-		} else  if (Vector3.Distance (target.position, transform.position) < 10) {
-			WalkToPosition (target.position);
+		if (isPaused) {
+			animator.speed = 0;	
+			rb.useGravity = false;
+			rb.velocity = Vector3.zero;
 		} else {
-			SetIdleState ();
+			animator.speed = 1;		
+			rb.useGravity = true;
+			if (transform.position.y < -0.03) {
+				SetFallingState ();
+			} else if (Vector3.Distance (target.position, transform.position) < 15) {
+				WalkToPosition (target.position);
+			} else {
+				SetIdleState ();
+			}
 		}
 	}
 
 	void OnTriggerEnter() {
-		print ("Collision iwth the boss" + GetComponent<Collider>().GetComponent<Collider>());
+		EventManager.TriggerEvent ("ARRESTED");
 	}
 
 	void SetIdleState () {
 		animator.SetBool ("isWalking", false);
 	}
 	void SetFallingState() {
-		animator.SetTrigger ("fallTrigger");
-		transform.Rotate (Vector3.right * 90 * Time.deltaTime);
+//		transform.TransformPoint (bc.center);
+		animator.SetTrigger("fallTrigger");
+		bc.enabled = false;
+		rb.AddForce (transform.forward * 5.0f);
+		transform.RotateAround (transform.TransformPoint(bc.center),
+			(transform.right),
+			270 * Time.deltaTime);
 	}
 	void WalkToPosition(Vector3 newPosition) {
 		// was using LookAt but I needed a way to only do partial lookat rotation
@@ -51,9 +75,7 @@ public class Douglas : MonoBehaviour {
 		if (!Physics.Raycast (transform.position, transform.forward, 1F, LayerMask.GetMask ("Scenery"))) {
 			animator.SetBool ("isWalking", true);		
 			transform.position += transform.forward * Time.deltaTime * 1.2F;
-		} else {
-			animator.SetBool ("isWalking", false);		
-		}
+		} 
 	}
 
 }

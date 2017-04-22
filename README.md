@@ -18,3 +18,5 @@ Spring 2017
 - [Unity Manual, Raycasting code](https://docs.unity3d.com/Manual/nav-MoveToClickPoint.html)
 
 - Skybox: Unity Asset store (qianyuez)
+
+- [EventManager class](https://unity3d.com/learn/tutorials/topics/scripting/events-creating-simple-messaging-system?playlist=17117)
