@@ -14,17 +14,12 @@ public class BossScript : MonoPauseBehavior {
 	public Vector3 originPosition;
 	public Vector3 originRotation;
 
-	void OnEnable () {
-		originPosition = transform.position;
-		originRotation = transform.eulerAngles;
-		restartAction = new UnityAction (RestartCharacter);
-		EventManager.StartListening ("RESTART", restartAction);
-		RegisterPause ();
-
-	}
-
 	void OnDisable () {
+		UnregisterPause ();
 		EventManager.StopListening ("RESTART", restartAction);
+		EventManager.StopListening ("ARRESTED", restartAction);
+		EventManager.StopListening ("VICTORY", restartAction);
+
 	}
 
 	void RestartCharacter () {
@@ -37,6 +32,15 @@ public class BossScript : MonoPauseBehavior {
 		isPaused = false;
 	}
 	void Start () {
+		originPosition = transform.position;
+		originRotation = transform.eulerAngles;
+		restartAction = new UnityAction (RestartCharacter);
+		EventManager.StartListening ("RESTART", restartAction);
+		EventManager.StartListening ("ARRESTED", restartAction);
+		EventManager.StartListening ("VICTORY", restartAction);
+
+
+		RegisterPause ();
 		GetAllComponents ();
 		hasDest = false;
 	}

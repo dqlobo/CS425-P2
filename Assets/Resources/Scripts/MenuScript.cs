@@ -17,8 +17,15 @@ public class MenuScript : MonoBehaviour {
 	UnityAction arrestedAction;
 	UnityAction victoryAction;
 	bool isGameOver;
-	// Use this for initialization
-	void OnEnable () {
+
+	void OnDisable () {
+		EventManager.StopListening ("RESTART", restartAction);
+		EventManager.StopListening ("PAUSE", pauseAction);
+		EventManager.StopListening ("ARRESTED", arrestedAction);
+		EventManager.StartListening ("VICTORY", victoryAction);
+	}
+
+	void Start () {
 		isPaused = false;
 		isGameOver = true;
 		image = GetComponent<Image> ();
@@ -31,16 +38,7 @@ public class MenuScript : MonoBehaviour {
 		EventManager.StartListening ("ARRESTED", arrestedAction);
 		victoryAction = new UnityAction (Won);
 		EventManager.StartListening ("VICTORY", victoryAction);
-	}
 
-	void OnDisable () {
-		EventManager.StopListening ("RESTART", restartAction);
-		EventManager.StopListening ("PAUSE", pauseAction);
-		EventManager.StopListening ("ARRESTED", arrestedAction);
-		EventManager.StartListening ("VICTORY", victoryAction);
-	}
-
-	void Start () {
 		image.color = Color.white;
 		image.sprite = mainSprite;
 	}

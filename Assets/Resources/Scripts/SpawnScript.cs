@@ -8,10 +8,19 @@ public class SpawnScript : MonoPauseBehavior {
 	public Transform target;
 	float timer;
 	float counter;
+	UnityAction restartAction;
+
+
+	void OnDisable () {
+		EventManager.StopListening ("RESTART", restartAction);
+		UnregisterPause ();
+	}
 
 	void Start () {
-		timer = 2; // offset (first spawn at 3 seconds
-		counter = 0;
+		restartAction = new UnityAction (RestartCounter);
+		EventManager.StartListening ("RESTART", restartAction);
+		RegisterPause ();
+		RestartCounter ();
 	}
 	
 	void Update () {
@@ -21,7 +30,7 @@ public class SpawnScript : MonoPauseBehavior {
 				SpawnNewDouglas ();
 				timer = 0;
 				counter++;
-				if (counter == 5) {
+				if (counter >= 10) {
 					EventManager.TriggerEvent ("VICTORY");
 				}
 			}
@@ -34,13 +43,21 @@ public class SpawnScript : MonoPauseBehavior {
 		Douglas dScript = newDouglas.GetComponent<Douglas> ();
 		dScript.target = target;
 		newDouglas.transform.SetParent (transform);
-		Vector3 xPosition = Vector3.right * Random.Range (-23, 15),
-			zPosition = Vector3.forward * Random.Range (-20, 20);
-
+		Vector3 xPosition = Vector3.right * Random.Range (-20, 10),
+			zPosition = Vector3.forward * Random.Range (-20, 10);
+		
 		NavMeshHit hit;
-		if (NavMesh.SamplePosition (xPosition + zPosition, out hit, 100, NavMesh.AllAreas)) {
+		if (NavMesh.SamplePosition (xPosition + zPosition, out hit, 15, NavMesh.AllAreas)) {
 			newDouglas.transform.position = hit.position;
+			if (NavMesh.Raycast(newDouglas.transform.position, newDouglas.transform.forward * 3, out hit, NavMesh.AllAreas)) {
+				transform.eulerAngles = Vector3.up * 180;
+			}
 		}
 
+	}
+
+	void RestartCounter () {
+		counter = 0;
+		timer = 2;
 	}
 }

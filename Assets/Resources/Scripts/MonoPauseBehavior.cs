@@ -9,7 +9,7 @@ public class MonoPauseBehavior : MonoBehaviour {
 	UnityAction unPauseRestartAction;
 	protected bool isPaused;
 
-	void OnEnable () {
+	void Start () {
 		RegisterPause ();
 	}
 
