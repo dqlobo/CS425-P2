@@ -23,17 +23,17 @@ public class Douglas : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (transform.position.y < -0.05) {
+		if (transform.position.y < -0.03) {
 			SetFallingState ();
-		} else  if (Vector3.Distance (target.position, transform.position) < 8) {
+		} else  if (Vector3.Distance (target.position, transform.position) < 10) {
 			WalkToPosition (target.position);
 		} else {
 			SetIdleState ();
 		}
 	}
 
-	void OnCollisionEnter(Collision collider) {
-//		print ("Collision");
+	void OnTriggerEnter() {
+		print ("Collision iwth the boss" + GetComponent<Collider>().GetComponent<Collider>());
 	}
 
 	void SetIdleState () {
@@ -44,14 +44,16 @@ public class Douglas : MonoBehaviour {
 		transform.Rotate (Vector3.right * 90 * Time.deltaTime);
 	}
 	void WalkToPosition(Vector3 newPosition) {
-//		target = newPosition;
-		animator.SetBool ("isWalking", true);
 		// was using LookAt but I needed a way to only do partial lookat rotation
-		// based code on https://forum.unity3d.com/threads/transform-lookat-or-quaternion-lookrotation-on-1-axis-only.36377/
+		// based rotation line on https://forum.unity3d.com/threads/transform-lookat-or-quaternion-lookrotation-on-1-axis-only.36377/
 		Quaternion partialRot = Quaternion.LookRotation(target.position - transform.position, Vector3.up);
 		transform.rotation = Quaternion.Slerp(transform.rotation, partialRot, Time.deltaTime / 2);
-		transform.position += transform.forward  * Time.deltaTime * 1.2F;
-
+		if (!Physics.Raycast (transform.position, transform.forward, 1F, LayerMask.GetMask ("Scenery"))) {
+			animator.SetBool ("isWalking", true);		
+			transform.position += transform.forward * Time.deltaTime * 1.2F;
+		} else {
+			animator.SetBool ("isWalking", false);		
+		}
 	}
 
 }

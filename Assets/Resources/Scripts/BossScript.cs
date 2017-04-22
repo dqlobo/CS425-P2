@@ -40,18 +40,6 @@ public class BossScript : MonoBehaviour {
 		}
 	}
 
-	void OnCollisionEnter(Collision collider) {		
-		print (collider.collider);
-	}
-
-	void OnTriggerEnter(Collider collider) {
-		print ("hit a damn trigger");
-
-		if (collider.GetComponent<Collider>().tag == "OBSTACLE") {
-			DidReachDestination ();
-		}
-	}
-
 	void WalkToPosition(Vector3 newPosition) {
 		target = newPosition;
 		animator.SetBool ("isWalking", true);
