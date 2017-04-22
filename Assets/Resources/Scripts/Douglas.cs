@@ -74,7 +74,7 @@ public class Douglas : MonoPauseBehavior {
 		transform.rotation = Quaternion.Slerp(transform.rotation, partialRot, Time.deltaTime / 2);
 		if (!Physics.Raycast (transform.position, transform.forward, 1F, LayerMask.GetMask ("Scenery"))) {
 			animator.SetBool ("isWalking", true);		
-			transform.position += transform.forward * Time.deltaTime * 1.2F;
+			transform.position += transform.forward * Time.deltaTime * 1.5F;
 		} 
 	}
 

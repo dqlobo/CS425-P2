@@ -7,18 +7,23 @@ public class SpawnScript : MonoPauseBehavior {
 	public float spawnInterval;
 	public Transform target;
 	float timer;
+	float counter;
 
 	void Start () {
 		timer = 2; // offset (first spawn at 3 seconds
+		counter = 0;
 	}
 	
-	// Update is called once per frame
 	void Update () {
 		if (!isPaused) {
 			timer += Time.deltaTime;
 			if (timer > spawnInterval) {
 				SpawnNewDouglas ();
 				timer = 0;
+				counter++;
+				if (counter == 5) {
+					EventManager.TriggerEvent ("VICTORY");
+				}
 			}
 		}
 	}
