@@ -4,7 +4,9 @@ using UnityEngine;
 using UnityEngine.Events;
 
 public class MonoPauseBehavior : MonoBehaviour {
+
 	UnityAction freezeAction;
+	UnityAction unPauseRestartAction;
 	protected bool isPaused;
 
 	void OnEnable () {
@@ -13,11 +15,14 @@ public class MonoPauseBehavior : MonoBehaviour {
 
 	protected void RegisterPause() {
 		freezeAction = new UnityAction (Freeze);
+		unPauseRestartAction = new UnityAction (RestartAndUnpause);
 		EventManager.StartListening ("PAUSE", freezeAction);
+		EventManager.StartListening ("RESTART", unPauseRestartAction); 
 	}
 
 	protected void UnregisterPause() {
 		EventManager.StopListening ("PAUSE", freezeAction);
+		EventManager.StartListening ("RESTART", unPauseRestartAction); 
 	}
 
 	void OnDisable () {
@@ -26,5 +31,10 @@ public class MonoPauseBehavior : MonoBehaviour {
 
 	protected void Freeze () {
 		isPaused = !isPaused;
+	}
+
+	void RestartAndUnpause () {
+		if (isPaused)
+			isPaused = false;
 	}
 }

@@ -34,6 +34,7 @@ public class BossScript : MonoPauseBehavior {
 		agent.SetDestination (transform.position);
 		animator.SetBool ("isWalking", false);
 		animator.SetTime (0);
+		isPaused = false;
 	}
 	void Start () {
 		GetAllComponents ();
