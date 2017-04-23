@@ -5,7 +5,9 @@ Spring 2017
 ##Assignment 2
 
 ###Special Features
-- Actually stops walking when it reaches destination. (Unlike sample game from class)
+- Actually stops walking when it reaches destination. (Unlike sample game from class where it takes an extra step)
+- Pause Menu
+
 
 ###References
 
@@ -17,6 +19,6 @@ Spring 2017
 
 - [Unity Manual, Raycasting code](https://docs.unity3d.com/Manual/nav-MoveToClickPoint.html)
 
-- Skybox: Unity Asset store (qianyuez)
+- Skybox: Unity Asset store (Hedgehog Team)
 
 - [EventManager class](https://unity3d.com/learn/tutorials/topics/scripting/events-creating-simple-messaging-system?playlist=17117)
