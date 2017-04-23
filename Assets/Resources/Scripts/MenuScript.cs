@@ -22,7 +22,7 @@ public class MenuScript : MonoBehaviour {
 		EventManager.StopListening ("RESTART", restartAction);
 		EventManager.StopListening ("PAUSE", pauseAction);
 		EventManager.StopListening ("ARRESTED", arrestedAction);
-		EventManager.StartListening ("VICTORY", victoryAction);
+		EventManager.StopListening ("VICTORY", victoryAction);
 	}
 
 	void Start () {

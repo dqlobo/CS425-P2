@@ -22,7 +22,7 @@ public class MonoPauseBehavior : MonoBehaviour {
 
 	protected void UnregisterPause() {
 		EventManager.StopListening ("PAUSE", freezeAction);
-		EventManager.StartListening ("RESTART", unPauseRestartAction); 
+		EventManager.StopListening ("RESTART", unPauseRestartAction); 
 	}
 
 	void OnDisable () {

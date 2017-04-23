@@ -73,6 +73,8 @@ public class BossScript : MonoPauseBehavior {
 			}
 			if (hasDest) {
 				WalkToPosition (target);
+			} else {
+				animator.SetBool ("isWalking", false);			
 			}
 			if (IsCloseEnough ()) {
 				DidReachDestination ();
@@ -87,6 +89,7 @@ public class BossScript : MonoPauseBehavior {
 
 	void DidReachDestination() {
 		animator.SetBool ("isWalking", false);
+		hasDest = false;
 	}
 
 	bool IsCloseEnough() {
