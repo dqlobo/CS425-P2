@@ -62,7 +62,8 @@ public class Douglas : MonoPauseBehavior {
 //		transform.TransformPoint (bc.center);
 		animator.SetTrigger("fallTrigger");
 		bc.enabled = false;
-		rb.AddForce (transform.forward * 5.0f);
+//		rb.AddForce (transform.forward * 5.0f);
+		transform.position += transform.forward * Time.deltaTime;
 		transform.RotateAround (transform.TransformPoint(bc.center),
 			(transform.right),
 			270 * Time.deltaTime);

@@ -43,16 +43,18 @@ public class SpawnScript : MonoPauseBehavior {
 		Douglas dScript = newDouglas.GetComponent<Douglas> ();
 		dScript.target = target;
 		newDouglas.transform.SetParent (transform);
-		Vector3 xPosition = Vector3.right * Random.Range (-20, 10),
+		do {
+			Vector3 xPosition = Vector3.right * Random.Range (-20, 10),
 			zPosition = Vector3.forward * Random.Range (-20, 10);
-		
-		NavMeshHit hit;
-		if (NavMesh.SamplePosition (xPosition + zPosition, out hit, 15, NavMesh.AllAreas)) {
-			newDouglas.transform.position = hit.position;
-			if (NavMesh.Raycast(newDouglas.transform.position, newDouglas.transform.forward * 3, out hit, NavMesh.AllAreas)) {
-				transform.eulerAngles = Vector3.up * 180;
+			
+			NavMeshHit hit;
+			if (NavMesh.SamplePosition (xPosition + zPosition, out hit, 15, NavMesh.AllAreas)) {
+				newDouglas.transform.position = hit.position;
+				if (NavMesh.Raycast (newDouglas.transform.position, newDouglas.transform.forward * 3, out hit, NavMesh.AllAreas)) {
+					transform.eulerAngles = Vector3.up * 180;
+				}
 			}
-		}
+		} while (Vector3.Distance(newDouglas.transform.position,target.position) < 1);
 
 	}
 

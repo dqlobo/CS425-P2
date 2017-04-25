@@ -8,6 +8,7 @@ public class BossScript : MonoPauseBehavior {
 
 	Vector3 target;
 	NavMeshAgent agent;
+	Rigidbody rb;
 	Animator animator;
 	bool hasDest;
 	UnityAction restartAction;
@@ -48,6 +49,7 @@ public class BossScript : MonoPauseBehavior {
 	void GetAllComponents () {
 		agent = GetComponent<NavMeshAgent> ();
 		animator = GetComponent<Animator> ();
+		rb = GetComponent<Rigidbody> ();
 	}
 
 	// Update is called once per frame
