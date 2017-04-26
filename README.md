@@ -4,7 +4,13 @@ Spring 2017
 
 ##Assignment 2
 
+###Instructions
+
+1) Entire Game takes place in the "MainScene"
+2) *Make sure Bake (loading bar in bottom right corner of Unity) is completed before running program* - failure to do so may cause issues with Physics and animations
+
 ###Special Features
+- Implements all specs from project description
 - Actually stops walking when it reaches destination. (Unlike sample game from class where it takes an extra step)
 - Police officers do not spawn on Mobster (Was ending game randomly)
 - Beautiful Pause Menu
