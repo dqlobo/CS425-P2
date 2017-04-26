@@ -6,7 +6,8 @@ Spring 2017
 
 ###Special Features
 - Actually stops walking when it reaches destination. (Unlike sample game from class where it takes an extra step)
-- Pause Menu
+- Police officers do not spawn on Mobster (Was ending game randomly)
+- Beautiful Pause Menu
 
 
 ###References

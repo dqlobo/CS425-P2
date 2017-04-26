@@ -28,7 +28,8 @@ public class BossScript : MonoPauseBehavior {
 		transform.eulerAngles = originRotation;
 		hasDest = false;
 		agent.SetDestination (transform.position);
-		animator.SetBool ("isWalking", false);
+		if (animator.GetBool("isWalking"))			
+			animator.SetBool ("isWalking", false);
 		animator.SetTime (0);
 		isPaused = false;
 	}
@@ -76,7 +77,8 @@ public class BossScript : MonoPauseBehavior {
 			if (hasDest) {
 				WalkToPosition (target);
 			} else {
-				animator.SetBool ("isWalking", false);			
+				if (animator.GetBool("isWalking"))
+					animator.SetBool ("isWalking", false);			
 			}
 			if (IsCloseEnough ()) {
 				DidReachDestination ();
@@ -85,12 +87,14 @@ public class BossScript : MonoPauseBehavior {
 	}
 
 	void WalkToPosition(Vector3 newPosition) {
-		animator.SetBool ("isWalking", true);
+		if (!animator.GetBool("isWalking"))
+			animator.SetBool ("isWalking", true);
 		agent.SetDestination (newPosition);
 	}
 
 	void DidReachDestination() {
-		animator.SetBool ("isWalking", false);
+		if (animator.GetBool("isWalking"))			
+			animator.SetBool ("isWalking", false);
 		hasDest = false;
 	}
 

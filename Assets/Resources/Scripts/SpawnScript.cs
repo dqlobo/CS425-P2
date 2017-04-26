@@ -44,8 +44,8 @@ public class SpawnScript : MonoPauseBehavior {
 		dScript.target = target;
 		newDouglas.transform.SetParent (transform);
 		do {
-			Vector3 xPosition = Vector3.right * Random.Range (-20, 10),
-			zPosition = Vector3.forward * Random.Range (-20, 10);
+			Vector3 xPosition = Vector3.right * Random.Range (-10, 0),
+			zPosition = Vector3.forward * Random.Range (-15, 2);
 			
 			NavMeshHit hit;
 			if (NavMesh.SamplePosition (xPosition + zPosition, out hit, 15, NavMesh.AllAreas)) {
@@ -54,7 +54,7 @@ public class SpawnScript : MonoPauseBehavior {
 					transform.eulerAngles = Vector3.up * 180;
 				}
 			}
-		} while (Vector3.Distance(newDouglas.transform.position,target.position) < 1);
+		} while (Vector3.Distance(newDouglas.transform.position,target.position) < 2);
 
 	}
 
